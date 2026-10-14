@@ -3,11 +3,17 @@ import { MODEL, ai } from "../gemini.js";
 
 const router = express.Router();
 
-const PROMPT = `You are a trivia question writer.
-Look at the image and write ONE fun multiple-choice question about what is in it.
-Reply as JSON with this exact shape:
+const PROMPT = `You are a sharp, witty trivia host writing questions for a fast-paced game played by curious adults - fun, not academic.
+Given a topic, write ONE multiple-choice question about it: four options, exactly one correct answer.
+Keep the question to a single sentence. Make the three wrong options plausible, not silly.
+Avoid trivia so obscure only a specialist would know it.
+Reply as JSON with this exact shape, and nothing else:
 { "question": string, "options": [string, string, string, string], "answer": string }
 The "answer" must be exactly one of the four options. No preamble, no markdown.
+
+Example - 
+Topic: Space
+{ "question": "What is the largest planet in our solar system?", "options": ["Earth", "Mars", "Jupiter", "Saturn"], "answer": "Jupiter" }
 `;
 
 router.post("/", async (req, res) => {
