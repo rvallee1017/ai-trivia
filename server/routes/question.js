@@ -22,20 +22,27 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Enter a topic.' });
   }
 
-  const schema = {
-    type: 'object',
-    properties: {
-      question: { type: 'string' },
-      options: {
-        type: 'array',
-        items: { type: 'string' },
-        minItems: 4,
-        maxItems: 4,
-      },
-      answer: { type: 'string' },
+ const schema = {
+  type: 'object',
+  properties: {
+    question: { type: 'string' },
+    options: {
+      type: 'array',
+      items: { type: 'string' },
+      minItems: 4,
+      maxItems: 4,
     },
-    required: ['question', 'options', 'answer'],
-  };
+    answer: {
+      type: 'string',
+      description: 'Copy one option exactly. No explanation or fun fact.',
+    },
+    funFact: {
+      type: 'string',
+      description: 'A separate sentence about the correct answer.',
+    },
+  },
+  required: ['question', 'options', 'answer', 'funFact'],
+};
 
   let failure;
 
@@ -65,7 +72,7 @@ router.post('/', async (req, res) => {
         !quiz.options.every((option) => typeof option === 'string' && option.trim()) ||
         !quiz.options.includes(quiz.answer)
       ) {
-        throw new Error('Gemini returned an invalid question.');
+        throw new Error('Invalid quiz: ' + JSON.stringify(quiz));
       }
 
       return res.json(quiz);
